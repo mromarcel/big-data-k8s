@@ -1,0 +1,33 @@
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: spark-brazilian-subscription-{{macros.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}}
+  namespace: processing
+spec:
+  type: Python
+  mode: cluster
+  image: "marcelmro/spark-py-app-brazilian-subscription"
+  imagePullPolicy: Always
+  mainApplicationFile: "local:///app/spark_app_brazilian_subscription.py"
+  sparkVersion: "3.1.1"
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  hadoopConf:
+    "f3.s3a.endpoint": "http://10.111.20.17"
+  driver:
+    coreRequest: 250m
+    coreLimit: "1200m"
+    memory: "512m"
+    labels:
+      version: 3.0.0
+    serviceAccount: default
+  executor:
+    coreRequest: 250m
+    instances: 2
+    memory: "512m"
+    labels:
+      version: 3.0.0
