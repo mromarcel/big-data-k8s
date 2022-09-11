@@ -23,4 +23,4 @@ WORKDIR /app
 USER 1001
 
 # command
-# Docker build . -t spark-py-MYIMAGE
+# Docker build -t spark-py-MYIMAGE .
